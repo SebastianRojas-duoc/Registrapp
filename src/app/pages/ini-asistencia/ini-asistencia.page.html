@@ -10,9 +10,18 @@
 <ion-content>
   <ion-item>
     <ion-label>Seleccionar Asignatura</ion-label>
-    <ion-select [(ngModel)]="selectedAsignatura">
+    <ion-select [(ngModel)]="selectedAsignaturaNombre">
       <ion-select-option *ngFor="let asign of asignaturasProfe" [value]="asign.nombre">
-        {{ asign.nombre }} - {{ asign.seccion }}
+        {{ asign.nombre }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Seleccionar Sección</ion-label>
+    <ion-select [(ngModel)]="selectedAsignaturaSeccion">
+      <ion-select-option *ngFor="let asign of asignaturasProfe" [value]="asign.seccion">
+        {{ asign.seccion }}
       </ion-select-option>
     </ion-select>
   </ion-item>

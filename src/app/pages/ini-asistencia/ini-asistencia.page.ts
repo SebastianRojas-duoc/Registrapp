@@ -12,7 +12,8 @@ import * as QRCode from 'qrcode';
 export class IniAsistenciaPage implements OnInit {
   asignaturasProfe: any[] = [];
   userId: string | undefined;
-  selectedAsignatura: string | undefined;
+  selectedAsignaturaNombre: string | undefined;
+  selectedAsignaturaSeccion: string | undefined;
   qrCodeData: string | undefined;
   qrCodeImageUrl: string | undefined;
 
@@ -20,7 +21,7 @@ export class IniAsistenciaPage implements OnInit {
     private firestore: AngularFirestore,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.authService.getCurrentUser().then(user => {
@@ -42,13 +43,25 @@ export class IniAsistenciaPage implements OnInit {
   }
 
   async generarQRCode() {
-    if (this.selectedAsignatura) {
-      this.qrCodeData = JSON.stringify({
-        asignaturaId: this.selectedAsignatura
-      });
+    if (this.selectedAsignaturaNombre && this.selectedAsignaturaSeccion) {
+      // Buscar en Firebase la asignatura con el nombre y sección seleccionados
+      const asignaturaSnapshot = await this.firestore.collection('asignaturas', ref =>
+        ref.where('nombre', '==', this.selectedAsignaturaNombre)
+           .where('seccion', '==', this.selectedAsignaturaSeccion)
+      ).get().toPromise();
 
-      this.qrCodeImageUrl = await QRCode.toDataURL(this.qrCodeData);  
+      if (!asignaturaSnapshot?.empty) {
+        const asignaturaDoc = asignaturaSnapshot?.docs[0];
+        const asignaturaId = asignaturaDoc?.id;
+
+        this.qrCodeData = JSON.stringify({
+          asignaturaId: asignaturaId
+        });
+
+        this.qrCodeImageUrl = await QRCode.toDataURL(this.qrCodeData);
+      } else {
+        console.error("Asignatura no encontrada para el nombre y la sección seleccionados.");
+      }
     }
-    
   }
 }
