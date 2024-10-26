@@ -27,16 +27,19 @@ export class SplashscreenPage implements OnInit {
       if (user) {
         try {
           await this.checkHuellaDigital();
-        const usuarioLogeado = await this.firestore.collection('usuarios').doc(user.uid).get().toPromise();
-        const userData = usuarioLogeado?.data() as Usuario;
+          const usuarioLogeado = await this.firestore.collection('usuarios').doc(user.uid).get().toPromise();
+          const userData = usuarioLogeado?.data() as Usuario;
 
-        if (userData.tipo === 'admin') {
-          this.router.navigate(['/admin']);
-        } else if (userData.tipo === 'alumno') {
-          this.router.navigate(['/alumnos']);
-        } else if (userData.tipo === 'profesor') {
-          this.router.navigate(['/profe']);
-        }  
+
+          if(userData) {
+            if (userData.tipo === 'admin') {
+              this.router.navigate(['/admin']);
+            } else if (userData.tipo === 'alumno') {
+              this.router.navigate(['/alumnos']);
+            } else if (userData.tipo === 'profesor') {
+              this.router.navigate(['/profe']);
+            }  
+          }
         }
         
         catch (error) {
