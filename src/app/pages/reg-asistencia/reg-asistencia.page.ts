@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService } from 'src/app/services/firebase/auth.service';
 import { AlertController } from '@ionic/angular';
+import { Clases } from 'src/app/interfaces/clases';
+import { Usuario } from 'src/app/interfaces/usuario';
 
 @Component({
   selector: 'app-reg-asistencia',
@@ -13,10 +15,9 @@ export class RegAsistenciaPage implements OnInit {
   asignaturaId: string | null = null;
   asignatura: any;
   nombreUsuario?: string;
-  correoUsuario: string = '';
-  password?:string;
+  correoUsuario?: string;
   uid?: string;
-  id?:string;
+  password?:string;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,13 +28,13 @@ export class RegAsistenciaPage implements OnInit {
 
   async ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.asignaturaId = params['asignaturaId']; 
+      this.asignaturaId = params['asignaturaId'];
       console.log(`Asignatura ID recibido: ${this.asignaturaId}`);
       this.obtenerAsignatura();
       this.obtenerUsuarioLogueado();
     });
   }
-  
+
   async obtenerAsignatura() {
     if (this.asignaturaId) {
       try {
@@ -49,7 +50,7 @@ export class RegAsistenciaPage implements OnInit {
       }
     }
   }
-  
+
   async obtenerUsuarioLogueado() {
     try {
       const user = await this.authService.getCurrentUser();
@@ -64,27 +65,86 @@ export class RegAsistenciaPage implements OnInit {
       console.error("Error al obtener el usuario logueado:", error);
     }
   }
-  
+
   async registrarAsistencia() {
     if (this.asignatura && this.uid) {
-      const asistenciaData = {
-        correoAlumno: this.correoUsuario,
-        asignatura: this.asignatura.nombre,
-        seccion: this.asignatura.seccion,
-        fecha: new Date(),
-      };
+      const fechaHoy = new Date();
+      fechaHoy.setHours(0, 0, 0, 0);
   
-      try {
-        await this.firestore.collection('clases').add(asistenciaData);
-        this.presentAlert("Registro exitoso", "Tu asistencia ha sido registrada.");
-      } catch (error) {
-        console.error("Error al registrar asistencia:", error);
-        this.presentAlert("Error", "No se pudo registrar la asistencia.");
+      const correoUsuario = this.correoUsuario || '';
+      
+      const usuarioRef = await this.firestore.collection('alumnos').doc(this.uid).get().toPromise();
+      if (!usuarioRef || !usuarioRef.exists) {
+        this.presentAlert("Error", "No estás registrado como alumno.");
+        return;
+      }
+  
+      const usuarioData = usuarioRef.data() as Usuario;
+      const usuarioAsignaturas = usuarioData?.asign || [];
+      const usuarioCarrera = usuarioData?.carrera;
+  
+      const asignaturaInscrita = usuarioAsignaturas.find((asignatura: any) => 
+        asignatura.nombre === this.asignatura.nombre &&
+        asignatura.seccion === this.asignatura.seccion
+      );
+  
+      if (!asignaturaInscrita) {
+        this.presentAlert("Error", "No estás inscrito en esta asignatura.");
+        return;
+      }
+  
+      if (usuarioCarrera !== this.asignatura.carrera) {
+        this.presentAlert("Error", "No estás inscrito en la carrera correcta para esta asignatura.");
+        return;
+      }
+  
+      const clasesRef = this.firestore.collection('clases', ref =>
+        ref.where('asignatura', '==', this.asignatura.nombre)
+           .where('seccion', '==', this.asignatura.seccion)
+           .where('fecha', '==', fechaHoy)
+      );
+  
+      const snapshot = await clasesRef.get().toPromise();
+  
+      if (!snapshot?.empty) {
+        const docId = snapshot?.docs[0].id;
+        const docData = snapshot?.docs[0].data() as Clases;
+  
+        const correoAlumnoArray = docData.correoAlumno || [];
+        if (!correoAlumnoArray.includes(correoUsuario)) {
+          correoAlumnoArray.push(correoUsuario);
+  
+          await this.firestore.collection('clases').doc(docId).update({
+            correoAlumno: correoAlumnoArray
+          });
+          this.presentAlert("Registro exitoso", "Tu asistencia ha sido registrada.");
+        } else {
+          this.presentAlert("Aviso", "Ya has registrado asistencia para hoy.");
+        }
+  
+      } else {
+        const asistenciaData: Clases = {
+          asignatura: this.asignatura.nombre,
+          seccion: this.asignatura.seccion,
+          fecha: fechaHoy,
+          correoAlumno: [correoUsuario]
+        };
+  
+        try {
+          await this.firestore.collection('clases').add(asistenciaData);
+          this.presentAlert("Registro exitoso", "Tu asistencia ha sido registrada.");
+        } catch (error) {
+          console.error("Error al registrar asistencia:", error);
+          this.presentAlert("Error", "No se pudo registrar la asistencia.");
+        }
       }
     } else {
       this.presentAlert("Error", "Asignatura o usuario no definido.");
     }
   }
+  
+  
+  
 
   async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({
