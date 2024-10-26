@@ -7,7 +7,7 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
 import { AuthService } from 'src/app/services/firebase/auth.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import Swal from 'sweetalert2';
-import { RandomUserService } from 'src/app/services/randomuser.service'; // Importar servicio de RandomUser
+import { RandomUserService } from 'src/app/services/randomuser.service'; 
 
 @Component({
   selector: 'app-register',
@@ -30,7 +30,7 @@ export class RegisterPage implements OnInit {
     private usuariosServices: UsuariosService,
     private menuController: MenuController,
     private firestore: AngularFirestore,
-    private randomUserService: RandomUserService // Inyectar servicio
+    private randomUserService: RandomUserService
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],

@@ -12,6 +12,7 @@ export class AuthService {
   public currentUser: Observable<Usuario | null> = this.currentUserSubject.asObservable();
 
   constructor(private angularFireAuth: AngularFireAuth, private firestore: AngularFirestore) { 
+    this.setPersistence();
     this.angularFireAuth.authState.subscribe(async (user) => {
       if (user) {
         const userDoc = await this.firestore.collection('usuarios').doc(user.uid).get().toPromise();
@@ -23,13 +24,17 @@ export class AuthService {
     });
   }
 
+  private async setPersistence() {
+    await this.angularFireAuth.setPersistence('local'); 
+  }
+
   async login(email: string, pass: string) {
     try {
       const userCredential = await this.angularFireAuth.signInWithEmailAndPassword(email, pass);
       const userDoc = await this.firestore.collection('usuarios').doc(userCredential.user?.uid).get().toPromise();
       const userData = userDoc?.data() as Usuario;
 
-      if (userData.enabled) {
+      if (userData && userData.enabled) {
         this.currentUserSubject.next(userData);
         return userCredential;
       } else {

@@ -1,4 +1,4 @@
-import { NgModule, LOCALE_ID } from '@angular/core'; // Importar LOCALE_ID
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { CommonModule, registerLocaleData } from '@angular/common';
@@ -33,7 +33,7 @@ registerLocaleData(localeEs);
     CommonModule
   ],
   providers: [
-    { provide: LOCALE_ID, useValue: 'es' }, // Asegúrate de que esté aquí
+    { provide: LOCALE_ID, useValue: 'es' },
     BarcodeScanner,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
