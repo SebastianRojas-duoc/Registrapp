@@ -1,0 +1,17 @@
+ion-content {
+    --offset-bottom: auto!important;
+    --overflow: hidden;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+}
+.con{
+  ion-button{
+    display: flex;
+    flex: auto;
+    text-align: center;
+    color: rgb(104, 104, 244);
+    flex-direction: column-reverse;
+  } 
+  }

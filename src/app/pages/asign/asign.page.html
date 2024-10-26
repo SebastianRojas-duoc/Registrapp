@@ -1,0 +1,22 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Asignaturas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let asign of asignaturasDisponibles">
+      <ion-label>
+        <h2>{{ asign.nombre }}</h2>
+        <p>Sección: {{ asign.seccion }}</p>
+      </ion-label>
+      <ion-checkbox slot="end" [checked]="asignSeleccionada(asign)" (ionChange)="toggleAsignatura(asign)"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" (click)="guardarAsignaturas()">Guardar Asignaturas</ion-button>
+</ion-content>

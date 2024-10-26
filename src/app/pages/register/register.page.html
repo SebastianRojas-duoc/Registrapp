@@ -1,0 +1,39 @@
+<ion-header [translucent]="true">
+  <ion-buttons slot="start">
+    <ion-back-button></ion-back-button>
+  </ion-buttons>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <img src='assets/icon/LogoF.png' alt=logo>
+      <ion-card-title>Registrarse</ion-card-title>
+    </ion-card-header>
+  
+    <ion-card-content [formGroup]="loginForm">
+      <ion-input fill="outline" formControlName="email" [(ngModel)]="emailValue" type="email" label="Correo:" labelPlacement="floating" placeholder="Ej: Panshoots"></ion-input>
+      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('email')?.hasError('required')">
+        El correo es obligatorio!.
+      </ion-text>
+      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('email')?.hasError('email')">
+        El correo es inválido!.
+      </ion-text>
+        <ion-input fill="outline" formControlName="name" [(ngModel)]="nombreValue" type="text" label="Nombre completo:" labelPlacement="floating" placeholder="Ej:asdasd"></ion-input>
+      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('name')?.hasError('required')">
+        El nombre es obligatorio!.
+      </ion-text>
+        <ion-input fill="outline" formControlName="pass" [(ngModel)]="passValue" type="password" label="Contraseña:" labelPlacement="floating" placeholder="Ej:123456"></ion-input>
+      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('pass')?.hasError('required')">
+        La contraseña es obligatoria!
+      </ion-text>
+      <ion-text position="stacked" color="danger" *ngIf="loginForm.get('pass')?.hasError('minlength')">
+        La contraseña tiene minimo 6 caracteres!
+      </ion-text>
+      <br>
+      <ion-button shape="round" color="warning"expand="full" (click)="registrarse()">Registrarse</ion-button>
+      <br>
+      <ion-button expand="block" (click)="registrarUsuariosAleatorios()">Registrar 10 Usuarios Aleatorios</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

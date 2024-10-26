@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-buttons slot="start">
+    <ion-back-button></ion-back-button>
+  </ion-buttons>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <img src='assets/icon/LogoF.png' alt=logo>
+    </ion-card-header>
+    
+    <ion-card-content [formGroup]="restablecerForm">
+      <ion-input fill="outline" formControlName="email" type="email" name="email" labelPlacement="floating" label="Ingrese Correo:"></ion-input>
+      <ion-text position="stacked" color="danger" *ngIf="restablecerForm.get('email')?.hasError('required')">
+        El correo es obligatorio!.
+      </ion-text>
+      <ion-text position="stacked" color="danger" *ngIf="restablecerForm.get('email')?.hasError('email')">
+        El correo es invalido!.
+      </ion-text>
+      <ion-button expand="full" shape="round" (click)="rest()">Ingresar</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

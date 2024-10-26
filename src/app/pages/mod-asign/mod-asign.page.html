@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Modificar Asignatura</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Modificar Asignatura</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="editAsignForm" (ngSubmit)="updateAsignatura()">
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Nombre Asignatura</ion-label>
+            <ion-input formControlName="nombre"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Sección Asignatura</ion-label>
+            <ion-input formControlName="seccion"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Descripción</ion-label>
+            <ion-textarea formControlName="descripcion"></ion-textarea>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Carrera</ion-label>
+            <ion-select formControlName="carrera">
+              <ion-select-option *ngFor="let carrera of carreras" [value]="carrera.id">
+                {{ carrera.nombre }} 
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+        <ion-footer>
+          <ion-button expand="block" type="submit" [disabled]="editAsignForm.invalid">Modificar Asignatura</ion-button>
+          <ion-button expand="block" color="danger" (click)="eliminarAsignatura()">Eliminar Asignatura</ion-button>
+        </ion-footer>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

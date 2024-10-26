@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Crear Asignatura</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="crearAsignForm" (ngSubmit)="crearAsignatura()">
+    <ion-item>
+      <ion-label position="floating">Nombre de la Asignatura</ion-label>
+      <ion-input formControlName="nombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Sección</ion-label>
+      <ion-input formControlName="seccion"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Descripción</ion-label>
+      <ion-textarea formControlName="descripcion"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Carrera</ion-label>
+      <ion-select formControlName="carrera" interface="popover">
+        <ion-select-option *ngFor="let carrera of carreras" [value]="carrera.id">
+          {{ carrera.nombre }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" [disabled]="crearAsignForm.invalid">Crear Asignatura</ion-button>
+  </form>
+</ion-content>

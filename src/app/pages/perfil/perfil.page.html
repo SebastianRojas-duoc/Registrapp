@@ -1,0 +1,36 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ nombreUsuario }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Correo:</strong> {{ correoUsuario }}</p>
+      <p><strong>Tipo:</strong> {{ tipoUsuario }}</p>
+
+      <ng-container *ngIf="tipoUsuario === 'alumno' || tipoUsuario === 'profesor'">
+        <p><strong>Carrera:</strong> {{ carreraNombre }}</p>
+
+        <p><strong>Asignaturas Inscritas:</strong></p>
+        <ul>
+          <li *ngFor="let asign of asignaturasInscritas">
+            {{ asign.nombre }} - Sección: {{ asign.seccion }}
+          </li>
+        </ul>
+      </ng-container>
+      <ng-container *ngIf="tipoUsuario === 'admin'">
+        <p>Este es un perfil de administrador.</p>
+      </ng-container>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+  

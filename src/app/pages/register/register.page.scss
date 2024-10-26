@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');
+ion-card {
+    font-family: "SUSE", sans-serif;
+    background-color: #0f51a8;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    width: auto;
+    height: 1000px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+
+    ion-card-title{
+        color: rgb(236, 218, 53);
+        font-size: 24px;
+        font-family: monospace;
+        margin-top: 10px;
+    }
+
+    ion-card-header {
+        text-align: center;
+        font-size: 20px;
+        margin-top:0px;
+
+        img{
+            height: 100px;
+            margin-top: 40px;
+            width: 100px;
+            align-self: center;
+            border-radius: 50%;
+        }
+    }
+    p{
+        text-align: center;
+        color: #000000;
+        font-size: 12px;
+    }
+    ion-input {
+        color: #000000;
+        --background: hsla(0, 0%, 100%, 0.096);
+        --padding-top: 10px;
+        --padding-bottom: 1px;
+        --border-radius:10px;
+        --height:8px;
+        font-size: 15px;
+    }
+}
+
+ion-content {
+    --offset-bottom: auto!important;
+    --overflow: hidden;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+
+

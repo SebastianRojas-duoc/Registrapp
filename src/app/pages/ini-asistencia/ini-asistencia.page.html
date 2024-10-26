@@ -1,0 +1,30 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Inicia Asistencia</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label>Seleccionar Asignatura</ion-label>
+    <ion-select [(ngModel)]="selectedAsignatura">
+      <ion-select-option *ngFor="let asign of asignaturasProfe" [value]="asign.nombre">
+        {{ asign.nombre }} - {{ asign.seccion }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-button expand="block" (click)="generarQRCode()">Generar QR</ion-button>
+
+  <ion-card *ngIf="qrCodeImageUrl">
+    <ion-card-header>
+      <ion-card-title>Escanea para Registrar Asistencia</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <img [src]="qrCodeImageUrl" alt="Código QR de Asistencia"/>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

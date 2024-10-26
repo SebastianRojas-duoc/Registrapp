@@ -1,0 +1,29 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Crear Carrera</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Crear Carrera</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="crearCarreraForm" (ngSubmit)="crearCarrera()">
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Nombre Carrera</ion-label>
+            <ion-input formControlName="nombre"></ion-input>
+          </ion-item>
+        </ion-list>
+        <ion-footer>
+          <ion-button expand="block" type="submit" [disabled]="crearCarreraForm.invalid">Crear Carrera</ion-button>
+        </ion-footer>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

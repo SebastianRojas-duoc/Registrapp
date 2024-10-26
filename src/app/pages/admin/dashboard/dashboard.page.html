@@ -1,0 +1,71 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Inicio</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <!-- Bienvenida al Usuario Logueado -->
+  <ion-card *ngIf="nombreUsuario" color="dark" [routerLink]="['/perfil']">
+    <ion-card-header>
+      <h2>Bienvenido, {{ nombreUsuario }} <ion-icon name="add-circle-outline" ></ion-icon></h2>
+    </ion-card-header>
+  </ion-card>
+
+  <!-- Collapse Usuarios -->
+  <ion-item lines="none" (click)="toggleUsuarios()">
+    <ion-label>Ver Usuarios</ion-label>
+    <ion-icon slot="end" [name]="usuariosExpandido ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+  </ion-item>
+  <ion-list *ngIf="usuariosExpandido">
+    <ion-item *ngFor="let aux of usuarios" [routerLink]="['/admin', aux.uid]">
+      <ion-label>
+        <p>Tipo Usuario: {{ aux.tipo }}</p>
+        <h2>Correo: {{ aux.email }}</h2>
+        <p>Nombre Usuario: {{ aux.nombre }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  
+  <br>
+
+  <!-- Collapse Asignaturas -->
+  <ion-item lines="none" (click)="toggleAsignaturas()">
+    <ion-label>Ver Asignaturas</ion-label>
+    <ion-icon slot="end" [name]="asignaturasExpandido ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+  </ion-item>
+  <ion-list *ngIf="asignaturasExpandido">
+    <ion-item *ngFor="let asignatura of asignaturas" [routerLink]="['/mod-asign', asignatura.id]">
+      <ion-label>
+        <h2>{{ asignatura.nombre }}</h2>
+        <p>Sección: {{ asignatura.seccion }}</p>
+      </ion-label>
+    </ion-item>
+    <ion-item routerLink="/crear-asign" class="con">
+      <ion-button fill="clear">Crear Asignatura +</ion-button>
+    </ion-item>
+  </ion-list>
+  
+  <br>
+
+  <!-- Collapse Carreras -->
+  <ion-item lines="none" (click)="toggleCarreras()">
+    <ion-label>Ver Carreras</ion-label>
+    <ion-icon slot="end" [name]="carrerasExpandido ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+  </ion-item>
+  <ion-list *ngIf="carrerasExpandido">
+    <ion-item *ngFor="let carrera of carreras" [routerLink]="['/mod-carrera', carrera.id]">
+      <ion-label>
+        <h2>{{ carrera.nombre }}</h2>
+      </ion-label>
+    </ion-item>
+    <ion-item routerLink="/crear-carrera" class="con">
+      <ion-button fill="clear">Crear Carrera +</ion-button>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

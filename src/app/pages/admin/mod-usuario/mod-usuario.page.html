@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Modificar Usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup]="editUserForm" (ngSubmit)="updateUser()">
+        <ion-list>
+          <ion-item>
+            <ion-label>Email: </ion-label>
+            <ion-input formControlName="email"> </ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Nombre: </ion-label>
+            <ion-input formControlName="nombre"> </ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Tipo: </ion-label>
+            <ion-select formControlName="tipo">
+              <ion-select-option value="admin">admin</ion-select-option>
+              <ion-select-option value="alumno">alumno</ion-select-option>
+              <ion-select-option value="profesor">profesor</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>Habilitado: </ion-label>
+            <ion-toggle formControlName="enabled"></ion-toggle>
+          </ion-item>
+        </ion-list>
+        <ion-footer routerLink="/admin">
+          <ion-button type="submit" >Modificar</ion-button>
+        </ion-footer>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
