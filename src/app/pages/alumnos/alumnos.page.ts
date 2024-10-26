@@ -112,17 +112,27 @@ export class AlumnosPage implements OnInit {
     const result = await BarcodeScanner.startScan();
   
     if (result.hasContent) {
-      const parsedQRData = JSON.parse(result.content); 
-      this.router.navigate(['/reg-asistencia'], { 
-        queryParams: { 
-          asignaturaId: JSON.stringify({ nombre: parsedQRData.nombre, seccion: parsedQRData.seccion }), 
-          email: this.correoUsuario 
-        }
-      });
+      const parsedQRData = JSON.parse(result.content);
+      console.log('Datos del QR escaneado:', parsedQRData);
+  
+      if (parsedQRData.asignaturaId) {
+        const asignaturaId = parsedQRData.asignaturaId;
+        console.log(`ID de la asignatura extraída del QR: ${asignaturaId}`);
+  
+        this.router.navigate(['/reg-asistencia'], {
+          queryParams: {
+            asignaturaId: asignaturaId,
+            email: this.correoUsuario
+          }
+        });
+      } else {
+        this.presentAlert("Error", "El código QR no contiene un ID de asignatura válido.");
+      }
     } else {
       this.presentAlert("Error", "No se encontró contenido en el código QR.");
     }
   }
+  
   
 
   async presentAlert(header: string, message: string) {

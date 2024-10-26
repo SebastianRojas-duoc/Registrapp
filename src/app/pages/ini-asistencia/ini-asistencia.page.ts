@@ -69,6 +69,7 @@ export class IniAsistenciaPage implements OnInit {
     } else {
         alert("Por favor selecciona tanto el nombre como la sección de la asignatura.");
     }
-}
+  }
+  
 
 }

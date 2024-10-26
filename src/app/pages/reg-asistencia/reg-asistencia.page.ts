@@ -16,6 +16,7 @@ export class RegAsistenciaPage implements OnInit {
   correoUsuario: string = '';
   password?:string;
   uid?: string;
+  id?:string;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,44 +27,53 @@ export class RegAsistenciaPage implements OnInit {
 
   async ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.asignaturaId = params['asignaturaId'];
+      this.asignaturaId = params['asignaturaId']; 
+      console.log(`Asignatura ID recibido: ${this.asignaturaId}`);
       this.obtenerAsignatura();
       this.obtenerUsuarioLogueado();
     });
   }
-
+  
   async obtenerAsignatura() {
     if (this.asignaturaId) {
-      const asignaturaDoc = this.firestore.collection('asignaturas').doc(this.asignaturaId);
-      asignaturaDoc.valueChanges().subscribe((asignatura: any) => {
-        if (asignatura) {
-          this.asignatura = asignatura;
+      try {
+        const asignaturaDoc = await this.firestore.collection('asignaturas').doc(this.asignaturaId).get().toPromise();
+        if (asignaturaDoc && asignaturaDoc.exists) {
+          this.asignatura = asignaturaDoc.data();
+          console.log("Datos de asignatura obtenidos:", this.asignatura);
         } else {
           console.error(`Asignatura no encontrada para ID: ${this.asignaturaId}`);
         }
-      });
+      } catch (error) {
+        console.error("Error al obtener la asignatura:", error);
+      }
     }
   }
-
+  
   async obtenerUsuarioLogueado() {
-    const user = await this.authService.getCurrentUser();
-    if (user) {
-      this.uid = user.uid;
-      this.nombreUsuario = user.displayName || '';
-      this.correoUsuario = user.email || '';
+    try {
+      const user = await this.authService.getCurrentUser();
+      if (user) {
+        this.uid = user.uid;
+        this.nombreUsuario = user.displayName || '';
+        this.correoUsuario = user.email || '';
+      } else {
+        console.error("Usuario no logueado.");
+      }
+    } catch (error) {
+      console.error("Error al obtener el usuario logueado:", error);
     }
   }
-
+  
   async registrarAsistencia() {
     if (this.asignatura && this.uid) {
       const asistenciaData = {
-        nombreAlumno: this.nombreUsuario,
         correoAlumno: this.correoUsuario,
         asignatura: this.asignatura.nombre,
         seccion: this.asignatura.seccion,
         fecha: new Date(),
       };
-
+  
       try {
         await this.firestore.collection('clases').add(asistenciaData);
         this.presentAlert("Registro exitoso", "Tu asistencia ha sido registrada.");

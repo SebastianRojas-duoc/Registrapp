@@ -1,12 +1,15 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
     <ion-title>Registrar Asistencia</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-text *ngIf="asignatura">
-    <h2>Asignatura: {{ asignatura.nombre }}</h2>
+    <p>Asignatura: {{ asignatura.nombre }}</p>
     <p>Sección: {{ asignatura.seccion }}</p>
   </ion-text>
 
@@ -21,6 +24,9 @@
       <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
     </ion-item>
 
-    <ion-button expand="full" (click)="registrarAsistencia()">Registrar Asistencia</ion-button>
+    <ion-button expand="full" [disabled]="!asignatura || !uid" (click)="registrarAsistencia()">
+      Registrar Asistencia
+    </ion-button>
   </form>
 </ion-content>
+
