@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService } from 'src/app/services/firebase/auth.service';
 import { AlertController } from '@ionic/angular';
 import { Clases } from 'src/app/interfaces/clases';
 import { Usuario } from 'src/app/interfaces/usuario';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-reg-asistencia',
@@ -23,7 +24,8 @@ export class RegAsistenciaPage implements OnInit {
     private route: ActivatedRoute,
     private firestore: AngularFirestore,
     private authService: AuthService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private router:Router
   ) {}
 
   async ngOnInit() {
@@ -68,11 +70,11 @@ export class RegAsistenciaPage implements OnInit {
 
   async registrarAsistencia() {
     if (this.asignatura && this.uid) {
-      const fechaHoy = new Date();
-      fechaHoy.setHours(0, 0, 0, 0);
+      const hoy = new Date();
+      const fechaInicio = formatDate(hoy, 'd \'de\' MMMM \'de\' y', 'es'); 
   
-      const correoUsuario = this.correoUsuario || '';
-      
+      const correoUsuario = this.correoUsuario || ''; 
+  
       const usuarioRef = await this.firestore.collection('alumnos').doc(this.uid).get().toPromise();
       if (!usuarioRef || !usuarioRef.exists) {
         this.presentAlert("Error", "No estás registrado como alumno.");
@@ -101,7 +103,7 @@ export class RegAsistenciaPage implements OnInit {
       const clasesRef = this.firestore.collection('clases', ref =>
         ref.where('asignatura', '==', this.asignatura.nombre)
            .where('seccion', '==', this.asignatura.seccion)
-           .where('fecha', '==', fechaHoy)
+           .where('fechaInicio', '==', fechaInicio)
       );
   
       const snapshot = await clasesRef.get().toPromise();
@@ -118,6 +120,7 @@ export class RegAsistenciaPage implements OnInit {
             correoAlumno: correoAlumnoArray
           });
           this.presentAlert("Registro exitoso", "Tu asistencia ha sido registrada.");
+          this.router.navigate(['/alumnos']);
         } else {
           this.presentAlert("Aviso", "Ya has registrado asistencia para hoy.");
         }
@@ -126,13 +129,14 @@ export class RegAsistenciaPage implements OnInit {
         const asistenciaData: Clases = {
           asignatura: this.asignatura.nombre,
           seccion: this.asignatura.seccion,
-          fecha: fechaHoy,
+          fechaInicio: fechaInicio, 
           correoAlumno: [correoUsuario]
         };
   
         try {
           await this.firestore.collection('clases').add(asistenciaData);
           this.presentAlert("Registro exitoso", "Tu asistencia ha sido registrada.");
+          this.router.navigate(['/alumnos']);
         } catch (error) {
           console.error("Error al registrar asistencia:", error);
           this.presentAlert("Error", "No se pudo registrar la asistencia.");
@@ -142,7 +146,6 @@ export class RegAsistenciaPage implements OnInit {
       this.presentAlert("Error", "Asignatura o usuario no definido.");
     }
   }
-  
   
   
 
