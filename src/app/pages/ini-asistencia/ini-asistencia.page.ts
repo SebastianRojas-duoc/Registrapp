@@ -44,24 +44,31 @@ export class IniAsistenciaPage implements OnInit {
 
   async generarQRCode() {
     if (this.selectedAsignaturaNombre && this.selectedAsignaturaSeccion) {
-      // Buscar en Firebase la asignatura con el nombre y sección seleccionados
-      const asignaturaSnapshot = await this.firestore.collection('asignaturas', ref =>
-        ref.where('nombre', '==', this.selectedAsignaturaNombre)
-           .where('seccion', '==', this.selectedAsignaturaSeccion)
-      ).get().toPromise();
+        try {
+            const asignaturaSnapshot = await this.firestore.collection('asignaturas', ref =>
+                ref.where('nombre', '==', this.selectedAsignaturaNombre)
+                   .where('seccion', '==', this.selectedAsignaturaSeccion)
+            ).get().toPromise();
 
-      if (!asignaturaSnapshot?.empty) {
-        const asignaturaDoc = asignaturaSnapshot?.docs[0];
-        const asignaturaId = asignaturaDoc?.id;
+            if (!asignaturaSnapshot?.empty) {
+                const asignaturaDoc = asignaturaSnapshot?.docs[0];
+                const asignaturaId = asignaturaDoc?.id;
 
-        this.qrCodeData = JSON.stringify({
-          asignaturaId: asignaturaId
-        });
-
-        this.qrCodeImageUrl = await QRCode.toDataURL(this.qrCodeData);
-      } else {
-        console.error("Asignatura no encontrada para el nombre y la sección seleccionados.");
-      }
+                this.qrCodeData = JSON.stringify({
+                    asignaturaId: asignaturaId
+                });
+                this.qrCodeImageUrl = await QRCode.toDataURL(this.qrCodeData);
+            } else {
+                console.error(`Asignatura no encontrada para Nombre: ${this.selectedAsignaturaNombre} y Sección: ${this.selectedAsignaturaSeccion}`);
+                alert(`Asignatura no encontrada para Nombre: ${this.selectedAsignaturaNombre} y Sección: ${this.selectedAsignaturaSeccion}`);
+            }
+        } catch (error) {
+            console.error("Error buscando la asignatura en Firebase:", error);
+            alert("Hubo un error buscando la asignatura en Firebase. Por favor, intenta nuevamente.");
+        }
+    } else {
+        alert("Por favor selecciona tanto el nombre como la sección de la asignatura.");
     }
-  }
+}
+
 }
