@@ -130,27 +130,32 @@ export class AlumnosPage implements OnInit {
   }
 
   async scanQRCode() {
-    const result = await BarcodeScanner.startScan();
+    try {
+      const result = await BarcodeScanner.startScan();
+      
+      if (result.hasContent) {
+        const parsedQRData = JSON.parse(result.content);
+        console.log('Datos del QR escaneado:', parsedQRData);
   
-    if (result.hasContent) {
-      const parsedQRData = JSON.parse(result.content);
-      console.log('Datos del QR escaneado:', parsedQRData);
+        if (parsedQRData.asignaturaId) {
+          const asignaturaId = parsedQRData.asignaturaId;
+          console.log(`ID de la asignatura extraída del QR: ${asignaturaId}`);
   
-      if (parsedQRData.asignaturaId) {
-        const asignaturaId = parsedQRData.asignaturaId;
-        console.log(`ID de la asignatura extraída del QR: ${asignaturaId}`);
-  
-        this.router.navigate(['/reg-asistencia'], {
-          queryParams: {
-            asignaturaId: asignaturaId,
-            email: this.correoUsuario
-          }
-        });
+          this.router.navigate(['/reg-asistencia'], {
+            queryParams: {
+              asignaturaId: asignaturaId,
+              email: this.correoUsuario
+            }
+          });
+        } else {
+          this.presentAlert("Error", "El código QR no contiene un ID de asignatura válido.");
+        }
       } else {
-        this.presentAlert("Error", "El código QR no contiene un ID de asignatura válido.");
+        this.presentAlert("Error", "No se encontró contenido en el código QR.");
       }
-    } else {
-      this.presentAlert("Error", "No se encontró contenido en el código QR.");
+    } catch (error) {
+      console.error('Error al abrir la cámara:', error);
+      this.presentAlert("Error", "No se pudo abrir la cámara. Asegúrate de que tienes permisos.");
     }
   }
   
