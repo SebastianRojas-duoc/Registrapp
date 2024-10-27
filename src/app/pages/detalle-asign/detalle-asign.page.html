@@ -11,9 +11,12 @@
   <ion-card *ngIf="asignatura">
     <ion-card-header>
       <h3>asignatura: {{ asignatura.nombre }}</h3>
-      <p>Sección: {{ asignatura.seccion }}</p>
-      <p>Carrera: {{ carrera }}</p>
     </ion-card-header>
+    <ion-card-content>
+      <p>Sección: {{ asignatura.seccion }}</p>
+      <p>descripcion: {{asignatura.descripcion}}</p>
+      <p>Carrera: {{ carrera }}</p>
+    </ion-card-content>
   </ion-card>
 </ion-content>
   
