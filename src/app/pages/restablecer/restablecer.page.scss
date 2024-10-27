@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');
 ion-card {
     font-family: "SUSE", sans-serif;
-    background-image: url('/assets/icon/login.png');
     background-size: cover;
+    background-color: #125cbd;
     background-position: center center;
     background-repeat: no-repeat;
-    width: 320px;
+    width: auto;
     height: 680px;
     margin-top: 0px;
     margin-bottom: 0px;
@@ -30,7 +30,7 @@ ion-card {
 }
 
 ion-header{
-    background-color: #65beff;
+    background-color: #125cbd;
 }
 
 ion-item {
@@ -41,8 +41,8 @@ ion-item {
 
 ion-input {
     color: #0f0f0f;
-    --border-color: #b4e0ff;
-    --background: hsl(205, 100%, 85%);
+    --border-color: #153763;
+    --background: #286bc3;
     --padding-top: 15px;
     --padding-bottom: 1px;
     font-size: 15px;

@@ -47,7 +47,9 @@ ion-card {
         font-size: 15px;
     }
 }
-
+ion-header{
+    background-color: #125cbd;
+}
 ion-content {
     --offset-bottom: auto!important;
     --overflow: hidden;

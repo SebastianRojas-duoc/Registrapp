@@ -129,18 +129,19 @@ export class AlumnosPage implements OnInit {
     await alert.present();
   }
 
+  
   async scanQRCode() {
-    try {
+    const status = await BarcodeScanner.checkPermission({ force: true });
+
+    if (status.granted) {
       const result = await BarcodeScanner.startScan();
-      
+
       if (result.hasContent) {
         const parsedQRData = JSON.parse(result.content);
         console.log('Datos del QR escaneado:', parsedQRData);
-  
+
         if (parsedQRData.asignaturaId) {
           const asignaturaId = parsedQRData.asignaturaId;
-          console.log(`ID de la asignatura extraída del QR: ${asignaturaId}`);
-  
           this.router.navigate(['/reg-asistencia'], {
             queryParams: {
               asignaturaId: asignaturaId,
@@ -153,9 +154,13 @@ export class AlumnosPage implements OnInit {
       } else {
         this.presentAlert("Error", "No se encontró contenido en el código QR.");
       }
-    } catch (error) {
-      console.error('Error al abrir la cámara:', error);
-      this.presentAlert("Error", "No se pudo abrir la cámara. Asegúrate de que tienes permisos.");
+    } else if (status.denied) {
+
+      this.presentAlert(
+        "Permiso requerido",
+        "Por favor, habilita el permiso de cámara en los ajustes de tu dispositivo."
+      );
+      
     }
   }
   
