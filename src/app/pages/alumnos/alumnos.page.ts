@@ -48,9 +48,30 @@ export class AlumnosPage implements OnInit {
   }
 
   cargarAsignaturasAlumno() {
-    this.firestore.collection('alumnos').doc(this.uid).valueChanges().subscribe((usuario: any) => {
+    this.firestore.collection('alumnos').doc(this.uid).valueChanges().subscribe(async (usuario: any) => {
       if (usuario && usuario.asign) {
-        this.asignaturasAlumno = usuario.asign;
+        const asignaturasConId: any[] = [];
+  
+        for (const asignatura of usuario.asign) {
+          const querySnapshot = await this.firestore.collection('asignaturas', ref => 
+            ref.where('nombre', '==', asignatura.nombre).where('seccion', '==', asignatura.seccion)).get().toPromise();
+  
+          if (!querySnapshot?.empty) {
+            const asignaturaData = querySnapshot?.docs[0].data();
+            const asignaturaId = querySnapshot?.docs[0].id;
+  
+            if (typeof asignaturaData === 'object' && asignaturaData !== null) {
+              asignaturasConId.push({ id: asignaturaId, ...asignaturaData });
+            } else {
+              console.error(`Asignatura no es un objeto válido: ${asignaturaData}`);
+            }
+          } else {
+            console.error(`No se encontró la asignatura con nombre: ${asignatura.nombre} y sección: ${asignatura.seccion}`);
+          }
+        }
+  
+        this.asignaturasAlumno = asignaturasConId;
+        console.log("Asignaturas cargadas con ID:", this.asignaturasAlumno);
       }
     });
   }

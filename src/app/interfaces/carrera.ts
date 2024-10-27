@@ -1,5 +1,5 @@
 export interface Carrera{
     id?:string;
-    nombre?: string;
+    nombre: string;
     asignaturas?: any [];
 }

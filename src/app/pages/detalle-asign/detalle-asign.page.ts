@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from 'src/app/services/firebase/auth.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Asignatura } from 'src/app/interfaces/asignatura';
+import { Carrera } from 'src/app/interfaces/carrera';
 
 @Component({
   selector: 'app-detalle-asign',
@@ -8,42 +10,41 @@ import { AuthService } from 'src/app/services/firebase/auth.service';
   styleUrls: ['./detalle-asign.page.scss'],
 })
 export class DetalleAsignPage implements OnInit {
-  asignatura: any = {}; // Datos de la asignatura
-  nombreCarrera: string = ''; // Nombre de la carrera
+  asignaturaId?: string;
+  asignatura: Asignatura | undefined;
+  carrera: string | undefined;
 
   constructor(
     private route: ActivatedRoute,
-    private firestoreService: AuthService
+    private firestore: AngularFirestore
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      // Obtenemos la asignatura y verificamos en la consola
-      this.firestoreService.getAsignaturaById(id).subscribe((data) => {
-        if (data) {
-          console.log("Asignatura obtenida:", data);
-          this.asignatura = data;
+    this.route.paramMap.subscribe(params => {
+      this.asignaturaId = params.get('id')!;
+      this.obtenerDetallesAsignatura(this.asignaturaId);
+    });
+  }
 
-          // Obtenemos la carrera si existe idCarrera
-          if (this.asignatura.idCarrera) {
-            this.firestoreService.getCarreraById(this.asignatura.idCarrera).subscribe((carreraData) => {
-              if (carreraData) {
-                console.log("Carrera obtenida:", carreraData);
-                this.nombreCarrera = carreraData.nombre; // Supongamos que el campo es "nombre"
-              } else {
-                console.error("No se encontró la carrera con ID:", this.asignatura.idCarrera);
-              }
-            });
+  obtenerDetallesAsignatura(id: string) {
+    this.firestore.collection('asignaturas').doc(id).valueChanges().subscribe((asignaturaData) => {
+      const asignatura = asignaturaData as Asignatura | undefined;
+      if (asignatura) {
+        this.asignatura = asignatura;
+
+        const carreraId = this.asignatura.carrera;
+
+        this.firestore.collection('carreras').doc(carreraId).valueChanges().subscribe((carreraData) => {
+          const carrera = carreraData as Carrera | undefined; 
+          if (carrera) {
+            this.carrera = carrera.nombre;
           } else {
-            console.warn("El campo idCarrera está vacío en la asignatura.");
+            console.error(`No se encontró la carrera con ID: ${carreraId}`);
           }
-        } else {
-          console.error("No se encontró la asignatura con ID:", id);
-        }
-      });
-    } else {
-      console.error("No se recibió un ID de asignatura en la ruta.");
-    }
+        });
+      } else {
+        console.error(`No se encontró la asignatura con ID: ${id}`);
+      }
+    });
   }
 }
