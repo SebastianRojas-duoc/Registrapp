@@ -77,11 +77,4 @@ export class AuthService {
       });
   }
 
-  getAsignaturaById(id: string): Observable<any> {
-    return this.firestore.collection('asignaturas').doc(id).valueChanges();
-  }
-
-  getCarreraById(id: string): Observable<any> {
-    return this.firestore.collection('carreras').doc(id).valueChanges();
-  }
 }

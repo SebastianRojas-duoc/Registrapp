@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService } from 'src/app/services/firebase/auth.service';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular'; // Asegúrate de tener la interfaz para Asignatura
+import { Asignatura } from 'src/app/interfaces/asignatura';
 
 @Component({
   selector: 'app-profe',
@@ -11,7 +12,7 @@ import { AlertController } from '@ionic/angular';
 })
 export class ProfePage implements OnInit {
 
-  asignaturasProfe: any[] = [];
+  asignaturasProfe: Asignatura[] = []; // Cambia el tipo de asignaturas
   uid: string = '';
   nombreUsuario?: string;
   asignaturasExpandido: boolean = false;
@@ -21,7 +22,7 @@ export class ProfePage implements OnInit {
     private firestore: AngularFirestore,
     private authService: AuthService,
     private router: Router,
-    private alertController:AlertController
+    private alertController: AlertController
   ) { }
 
   ngOnInit() {
@@ -34,7 +35,6 @@ export class ProfePage implements OnInit {
       }
     });
   }
-
 
   obtenerUsuarioLogueado() {
     this.authService.getCurrentUser().then(user => {
@@ -49,9 +49,30 @@ export class ProfePage implements OnInit {
   }
 
   cargarAsignaturasProfe() {
-    this.firestore.collection('profesores').doc(this.uid).valueChanges().subscribe((usuario: any) => {
+    this.firestore.collection('profesores').doc(this.uid).valueChanges().subscribe(async (usuario: any) => {
       if (usuario && usuario.asign) {
-        this.asignaturasProfe = usuario.asign; 
+        const asignaturasConId: any[] = [];
+  
+        for (const asignatura of usuario.asign) {
+          const querySnapshot = await this.firestore.collection('asignaturas', ref => 
+            ref.where('nombre', '==', asignatura.nombre).where('seccion', '==', asignatura.seccion)).get().toPromise();
+  
+          if (!querySnapshot?.empty) {
+            const asignaturaData = querySnapshot?.docs[0].data();
+            const asignaturaId = querySnapshot?.docs[0].id;
+  
+            if (typeof asignaturaData === 'object' && asignaturaData !== null) {
+              asignaturasConId.push({ id: asignaturaId, ...asignaturaData });
+            } else {
+              console.error(`Asignatura no es un objeto válido: ${asignaturaData}`);
+            }
+          } else {
+            console.error(`No se encontró la asignatura con nombre: ${asignatura.nombre} y sección: ${asignatura.seccion}`);
+          }
+        }
+  
+        this.asignaturasProfe = asignaturasConId;
+        console.log("Asignaturas cargadas con ID:", this.asignaturasProfe);
       }
     });
   }
@@ -63,9 +84,11 @@ export class ProfePage implements OnInit {
   agregarAsignaturas() {
     this.router.navigate(['/asign']);
   }
+
   asistencia() {
     this.router.navigate(['/ini-asistencia']);
   }
+
   async checkCarrera() {
     const profeDoc = this.firestore.collection('profesores').doc(this.uid);
     const profeSnapshot = await profeDoc.get().toPromise();
@@ -91,7 +114,7 @@ export class ProfePage implements OnInit {
 
     const alert = await this.alertController.create({
       header: 'Selecciona tu Carrera',
-      message: 'No se podra cambiar luego',
+      message: 'No se podrá cambiar luego',
       inputs: alertInputs || [],
       buttons: [
         {
@@ -109,5 +132,10 @@ export class ProfePage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  irADetalleAsignatura(asignatura: Asignatura) {
+    const asignaturaId = asignatura.id; 
+    this.router.navigate(['/detalle-asign', { id: asignaturaId }]);
   }
 }

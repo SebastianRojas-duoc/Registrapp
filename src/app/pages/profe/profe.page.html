@@ -20,7 +20,7 @@
   </ion-item>
 
   <ion-list *ngIf="asignaturasExpandido">
-    <ion-item *ngFor="let asignatura of asignaturasProfe">
+    <ion-item *ngFor="let asignatura of asignaturasProfe"[routerLink]="['/detalle-asign', asignatura.id]">
       <ion-label>
         <h2>{{ asignatura.nombre }}</h2>
         <p>Sección: {{ asignatura.seccion }}</p>
