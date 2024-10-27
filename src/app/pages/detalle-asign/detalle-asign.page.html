@@ -1,12 +1,21 @@
 <ion-header [translucent]="true">
-  <ion-buttons slot="start">
-    <ion-back-button></ion-back-button>
-  </ion-buttons>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalle de Asignatura</ion-title>
+  </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">detalle-asign</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  
+<ion-content>
+  <ion-card *ngIf="asignatura.nombre">
+    <ion-card-header>
+      <ion-card-title>{{ asignatura.nombre }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Sección:</strong> {{ asignatura.seccion || 'No disponible' }}</p>
+      <p><strong>Carrera:</strong> {{ nombreCarrera || 'No disponible' }}</p>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
+  
