@@ -1,6 +1,5 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouteReuseStrategy } from '@angular/router';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -16,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { QRScanner } from '@ionic-native/qr-scanner/ngx';
 import { QrCodeModule } from 'ng-qrcode';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { RouteReuseStrategy } from '@angular/router';
 
 registerLocaleData(localeEs);
 

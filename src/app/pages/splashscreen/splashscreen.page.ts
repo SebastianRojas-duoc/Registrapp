@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Router } from '@angular/router';
 import { Usuario } from 'src/app/interfaces/usuario';
 import { AuthService } from 'src/app/services/firebase/auth.service';
 import { NativeBiometric } from 'capacitor-native-biometric';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-splashscreen',

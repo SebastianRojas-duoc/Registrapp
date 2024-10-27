@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService } from 'src/app/services/firebase/auth.service';
-import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-alumnos',
