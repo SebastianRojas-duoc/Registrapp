@@ -88,46 +88,11 @@ export class AlumnosPage implements OnInit {
     const alumnoDoc = this.firestore.collection('alumnos').doc(this.uid);
     const alumnoSnapshot = await alumnoDoc.get().toPromise();
     const alumno = alumnoSnapshot?.data() as { carrera?: string };
-
-    if (alumno && !alumno.carrera) {
-      this.presentCarreraAlert(alumnoDoc);
-    } else if (alumno?.carrera) {
+    if (alumno?.carrera) {
       this.carreraSeleccionada = alumno.carrera;
     }
   }
 
-  async presentCarreraAlert(alumnoDoc: any) {
-    const carrerasSnapshot = await this.firestore.collection('carreras').get().toPromise();
-    const carreras = carrerasSnapshot?.docs.map(doc => ({ id: doc.id, ...(doc.data() as { nombre: string }) }));
-
-    const alertInputs = carreras?.map(carrera => ({
-      name: 'carrera',
-      type: 'radio' as const,
-      label: carrera.nombre,
-      value: carrera.id
-    }));
-
-    const alert = await this.alertController.create({
-      header: 'Selecciona tu Carrera',
-      message: 'No se podra cambiar luego',
-      inputs: alertInputs || [],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Seleccionar',
-          handler: (carreraId: string) => {
-            alumnoDoc.update({ carrera: carreraId });
-            this.carreraSeleccionada = carreraId;
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
 
   
   async scanQRCode() {

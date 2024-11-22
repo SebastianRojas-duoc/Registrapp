@@ -28,6 +28,13 @@
       <ion-button shape="round" color="warning"expand="full" (click)="login()">Ingresar</ion-button>
       <ion-button fill="clear" (click)="res()" class="con">¿olvidó su contraseña?</ion-button>
       <br>
+      <ion-button expand="full" color="primary" (click)="loginWithGoogle()">
+        Iniciar sesión con Google
+      </ion-button>
+      <ion-button expand="full" color="secondary" (click)="loginWithGitHub()">
+        Iniciar sesión con GitHub
+      </ion-button>
+      <br>
       <p>¿Aún no tienes una cuenta?</p>
       <ion-button shape="round" color="dark" expand="full" routerLink="/register">Registrarse</ion-button>
     </ion-card-content>

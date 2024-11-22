@@ -69,10 +69,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/mod-carrera/mod-carrera.module').then( m => m.ModCarreraPageModule)
   },
   {
-    path: 'ini-asistencia',
-    loadChildren: () => import('./pages/ini-asistencia/ini-asistencia.module').then( m => m.IniAsistenciaPageModule)
-  },
-  {
     path: 'perfil',
     loadChildren: () => import('./pages/perfil/perfil.module').then( m => m.PerfilPageModule)
   },

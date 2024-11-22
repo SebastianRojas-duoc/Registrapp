@@ -1,22 +1,26 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Detalle de Asignatura</ion-title>
+    <ion-title>Detalle Asignatura</ion-title>
   </ion-toolbar>
 </ion-header>
-  
+
 <ion-content>
   <ion-card *ngIf="asignatura">
     <ion-card-header>
-      <h3>asignatura: {{ asignatura.nombre }}</h3>
+      <ion-card-title>{{ asignatura.nombre }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <p>Sección: {{ asignatura.seccion }}</p>
       <p>descripcion: {{asignatura.descripcion}}</p>
       <p>Carrera: {{ carrera }}</p>
+      <br>
+
+      <ion-button *ngIf="isProfesor" (click)="generarQRCode()">Generar QR</ion-button>
+
+      <ion-img *ngIf="qrCodeImageUrl" [src]="qrCodeImageUrl"></ion-img>
     </ion-card-content>
   </ion-card>
 </ion-content>
-  

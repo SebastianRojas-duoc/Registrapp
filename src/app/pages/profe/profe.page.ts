@@ -85,53 +85,13 @@ export class ProfePage implements OnInit {
     this.router.navigate(['/asign']);
   }
 
-  asistencia() {
-    this.router.navigate(['/ini-asistencia']);
-  }
-
   async checkCarrera() {
     const profeDoc = this.firestore.collection('profesores').doc(this.uid);
     const profeSnapshot = await profeDoc.get().toPromise();
     const profe = profeSnapshot?.data() as { carrera?: string };
-
-    if (profe && !profe.carrera) {
-      this.presentCarreraAlert(profeDoc);
-    } else if (profe?.carrera) {
+    if (profe?.carrera) {
       this.carreraSeleccionada = profe.carrera;
     }
-  }
-
-  async presentCarreraAlert(profeDoc: any) {
-    const carrerasSnapshot = await this.firestore.collection('carreras').get().toPromise();
-    const carreras = carrerasSnapshot?.docs.map(doc => ({ id: doc.id, ...(doc.data() as { nombre: string }) })); 
-
-    const alertInputs = carreras?.map(carrera => ({
-      name: 'carrera',
-      type: 'radio' as const,
-      label: carrera.nombre,
-      value: carrera.id
-    }));
-
-    const alert = await this.alertController.create({
-      header: 'Selecciona tu Carrera',
-      message: 'No se podrá cambiar luego',
-      inputs: alertInputs || [],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Seleccionar',
-          handler: (carreraId: string) => { 
-            profeDoc.update({ carrera: carreraId });
-            this.carreraSeleccionada = carreraId; 
-          }
-        }
-      ]
-    });
-
-    await alert.present();
   }
 
   irADetalleAsignatura(asignatura: Asignatura) {

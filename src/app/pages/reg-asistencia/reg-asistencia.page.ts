@@ -82,7 +82,7 @@ export class RegAsistenciaPage implements OnInit {
       }
   
       const usuarioData = usuarioRef.data() as Usuario;
-      const usuarioAsignaturas = usuarioData?.asign || [];
+      const usuarioAsignaturas = usuarioData?.asignaturas || [];
       const usuarioCarrera = usuarioData?.carrera;
   
       const asignaturaInscrita = usuarioAsignaturas.find((asignatura: any) => 

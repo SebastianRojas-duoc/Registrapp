@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Usuario } from 'src/app/interfaces/usuario';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { GoogleAuthProvider, GithubAuthProvider, AuthProvider } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,11 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AuthService {
   private currentUserSubject: BehaviorSubject<Usuario | null> = new BehaviorSubject<Usuario | null>(null);
   public currentUser: Observable<Usuario | null> = this.currentUserSubject.asObservable();
-
-  constructor(private angularFireAuth: AngularFireAuth, private firestore: AngularFirestore) { 
+  
+  constructor(
+    private angularFireAuth: AngularFireAuth,
+    private firestore: AngularFirestore
+  ) { 
     this.setPersistence();
     this.angularFireAuth.authState.subscribe(async (user) => {
       if (user) {
@@ -26,6 +30,25 @@ export class AuthService {
 
   private async setPersistence() {
     await this.angularFireAuth.setPersistence('local'); 
+  }
+
+  async signInWithProvider(providerType: 'google' | 'github') {
+    try {
+      let provider: AuthProvider | undefined;
+      if (providerType === 'google') {
+        provider = new GoogleAuthProvider();
+      } else if (providerType === 'github') {
+        provider = new GithubAuthProvider();
+      }
+
+      if (!provider) {
+        throw new Error('Proveedor de autenticación no válido');
+      }
+
+      return await this.angularFireAuth.signInWithPopup(provider);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async login(email: string, pass: string) {
@@ -76,5 +99,4 @@ export class AuthService {
         throw error;
       });
   }
-
 }
